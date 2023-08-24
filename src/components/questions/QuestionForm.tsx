@@ -6,15 +6,11 @@ import { Answer, Question } from '../reports/ReportForm';
 import { Button } from 'primereact/button';
 import { PrimeIcons } from 'primereact/api';
 import { InputText } from 'primereact/inputtext';
-import { InputNumber, InputNumberChangeEvent, InputNumberValueChangeEvent } from 'primereact/inputnumber';
+import { InputNumber, InputNumberChangeEvent } from 'primereact/inputnumber';
 
 interface QuestionFormProps {
-  answers: Array<Answer>;
   currentQuestion: Question;
   currentCuestionIndex: number;
-  isMultipleChoice: boolean;
-  isYesNoQuestion: boolean;
-  question: Question;
   questions: Array<Question>,
   selectedAnswers: Array<Answer>;
   handleNext: () => void;
@@ -23,12 +19,8 @@ interface QuestionFormProps {
 }
 
 export const QuestionForm: React.FC<QuestionFormProps> = ({
-  answers,
   currentQuestion,
   currentCuestionIndex,
-  isMultipleChoice,
-  isYesNoQuestion,
-  question,
   questions,
   selectedAnswers,
   handlePrevious,
@@ -37,28 +29,25 @@ export const QuestionForm: React.FC<QuestionFormProps> = ({
 }) => {
   const [selectedYesNoMap, setSelectedYesNoMap] = useState<{ [key: string]: string | null }>({});
   const [inputTextValues, setInputTextValues] = useState<{ [key: string]: string }>({});
-  const [inputNumberValues, setInputNumberValues] = useState<{ [key: string]: number }>({});
-  const [inputTextAreaValues, setInputTextAreaValues] = useState<{ [key: string]: string }>({});
+
+  const { answers, id, isMultipleChoice, isYesNoQuestion, inputs } = currentQuestion;
 
   const handleInputChange = (inputName: string, value: string) => {
-    setInputTextValues(prevValues => ({ ...prevValues, [inputName]: value }));
+    console.log(inputTextValues);
+    setInputTextValues({
+      ...inputTextValues,
+      [inputName] : value
+    });
+  
   };
   
-  const handleInputNumberChange = (inputName: string, value: number) => {
-    setInputNumberValues(prevValues => ({ ...prevValues, [inputName]: value }));
-  };
-  
-  const handleInputTextAreaChange = (inputName: string, value: string) => {
-    setInputTextAreaValues(prevValues => ({ ...prevValues, [inputName]: value }));
-  };
-
   const handleYesNoChange = (answer: Answer) => {
     setSelectedYesNoMap((prevMap) => ({
       ...prevMap,
-      [question.id]: answer.answer,
+      [id]: answer.answer,
     }));
 
-    const updatedSelectedAnswers = selectedAnswers.filter((a) => a.questionId !== question.id);
+    const updatedSelectedAnswers = selectedAnswers.filter((a) => a.questionId !== id);
 
     const existingIndex = updatedSelectedAnswers.findIndex((a) => a.questionId === answer.questionId);
     if (existingIndex !== -1) {
@@ -88,7 +77,7 @@ export const QuestionForm: React.FC<QuestionFormProps> = ({
     if (existingIndex !== -1) {
       updatedSelectedAnswers.splice(existingIndex, 1);
     } else {
-      updatedSelectedAnswers.push({ ...answer, questionId: question.id });
+      updatedSelectedAnswers.push({ ...answer, questionId: id });
     }
 
     // Actualizar el estado con la nueva lista de updatedSelectedAnswers
@@ -97,45 +86,50 @@ export const QuestionForm: React.FC<QuestionFormProps> = ({
 
   return (
     <React.Fragment>
-      <h4 className="col-12">{question.question}</h4>
+      <h4 className="col-12">{currentQuestion.question}</h4>
       {
-        question.inputs?.map(input => (
-          <div className="col-12 lg:col-6">
+        inputs ? inputs?.map(input => (
+          <div className={inputs.length > 1 ? "col-12 lg:col-6" : "col-12"}>
             <label htmlFor={input.name} className="block mb-2">{input.label}</label>
             {
               input.type === "number" ?
               <InputNumber
-                className="mb-4"
                 id={input.name}
-                name={input.name}
-                // onChange={(e: InputNumberValueChangeEvent) => handleInputChange(input.name, e.value!.toString())}
+                name={input.name} 
+                onChange={(e: InputNumberChangeEvent) => handleInputChange(input.name, e.value!.toString())}
+                placeholder="Redactar"
                 suffix={input.suffix ?? ""}
-                value={Number(input.value)}
+                value={Number(inputTextValues[input.name])}
               />
+              : input.type === "multiline" ?
+              <InputTextarea
+                cols={12}
+                id={input.name}
+                name={input.name} 
+                onChange={(e: ChangeEvent<HTMLTextAreaElement>) => handleInputChange(input.name, e.target.value)}
+                placeholder="Redactar"
+                rows={12}
+                value={inputTextValues[input.name]}/>
               :
               <InputText
                 className="mb-4"
                 id={input.name}
                 name={input.name}
                 onChange={(e: ChangeEvent<HTMLInputElement>) => handleInputChange(input.name, e.target.value)}
-                value={input.value}
+                value={inputTextValues[input.name]}
             />
             }
           </div>
         ))
-      }
-      {
-        question.isWritable ?
-        <InputTextarea  className="mb-5 ml-2 mr-2" rows={12} cols={12} placeholder="Redactar" />
       :
-      answers.map((answer) => (
+      answers!.map((answer) => (
         <div className="field-checkbox col-6 gap-1" key={answer.answer}>
           {isYesNoQuestion && !isMultipleChoice ? (
             <RadioButton
               className="field-radiobutton"
-              name={question.id.toString()} // Agrupa los RadioButtons por el id de la pregunta
+              name={id.toString()} // Agrupa los RadioButtons por el id de la pregunta
               value={answer.answer}
-              checked={selectedYesNoMap[question.id] === answer.answer}
+              checked={selectedYesNoMap[id] === answer.answer}
               onChange={() => handleYesNoChange(answer)}
             />
           ) : 
@@ -168,7 +162,7 @@ export const QuestionForm: React.FC<QuestionFormProps> = ({
           <Button icon={PrimeIcons.CHEVRON_CIRCLE_LEFT} outlined onClick={handlePrevious} disabled={currentCuestionIndex === 0}>
             Anterior
           </Button>
-          <Button icon={PrimeIcons.CHEVRON_CIRCLE_RIGHT} severity="success" onClick={handleNext} disabled={currentCuestionIndex === questions.length - 1 || (!currentQuestion.isWritable && selectedAnswers.filter(a => a.questionId === currentQuestion.id).length === 0)}>
+          <Button icon={PrimeIcons.CHEVRON_CIRCLE_RIGHT} severity="success" onClick={handleNext} disabled={currentCuestionIndex === questions.length - 1 || (selectedAnswers.filter(a => a.questionId === currentQuestion.id).length === 0) || (inputs?.length > 0 && Object.values(inputTextValues).every(value => value.trim() !== ''))}>
             Siguiente
           </Button>
         </div>

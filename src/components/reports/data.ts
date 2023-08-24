@@ -710,7 +710,6 @@ export const reportData: Report [] = [{
       question: 'Cuáles son los daños? Seleccionar',
       isYesNoQuestion: false,
       isMultipleChoice: true,
-      isWritable: false,
       answers: [
         {
           id: 0,
@@ -768,7 +767,6 @@ export const reportData: Report [] = [{
       question: '¿De qué tipo de material es el muro?',
       isYesNoQuestion: false,
       isMultipleChoice: false,
-      isWritable: false,
       answers: [
         {
           id: 8,
@@ -800,16 +798,22 @@ export const reportData: Report [] = [{
     {
       id: 2,
       question: 'Redacción manual',
-      isWritable: true,
       isYesNoQuestion: false,
-      isMultipleChoice: false
+      isMultipleChoice: false,
+      inputs: [
+        {
+          label: "Redactar",
+          name: "manualRedaction1",
+          type: "multiline",
+          value: "",
+        }
+      ]
     },
     {
       id: 3,
       question: 'Respecto al árbol, ¿forma parte de una zona que puede considerarse jardín?',
       isYesNoQuestion: true,
       isMultipleChoice: false,
-      isWritable: false,
       answers: [
         {
           id: 12,
@@ -829,7 +833,6 @@ export const reportData: Report [] = [{
       question: '¿El árbol se encuentra en buen estado en la zona donde quebró?',
       isYesNoQuestion: true,
       isMultipleChoice: false,
-      isWritable: false,
       answers: [
         {
           id: 14,
@@ -851,7 +854,6 @@ export const reportData: Report [] = [{
       question: '¿El daño presenta falta de mantenimiento o desgaste en la zona de empotramiento como oxidación o mal anclaje?',
       isYesNoQuestion: true,
       isMultipleChoice: false,
-      isWritable: false,
       answers: [
         {
           id: 16,
@@ -870,7 +872,6 @@ export const reportData: Report [] = [{
       question: '¿En la estación meteorológica de la AEMET más cercana al riesgo asegurado, supera el umbral establecido?',
       isYesNoQuestion: true,
       isMultipleChoice: false,
-      isWritable: false,
       answers: [
         {
           id: 18,
@@ -891,7 +892,6 @@ export const reportData: Report [] = [{
       question: '¿Qué indica la póliza respecto al viento?',
       isYesNoQuestion: false,
       isMultipleChoice: false,
-      isWritable: false,
       answers: [
         {
           id: 20,
@@ -930,7 +930,6 @@ export const reportData: Report [] = [{
       question: 'Datos AEMET',
       isYesNoQuestion: false,
       isMultipleChoice: false,
-      isWritable: false,
       inputs: [
         {
           label: "Estación meteorológica de la AEMET más cercana",
@@ -951,7 +950,6 @@ export const reportData: Report [] = [{
       question: '¿En la estación meteorológica de la AEMET más cercana al riesgo asegurado, supera el umbral establecido?',
       isYesNoQuestion: true,
       isMultipleChoice: false,
-      isWritable: false,
       answers: [
         {
           id: 26,
@@ -971,7 +969,6 @@ export const reportData: Report [] = [{
       question: '¿En las estaciones meteorológicas privadas como balearsmeteo o meteoclimatic, se verifica superación del umbral establecido en póliza?',
       isYesNoQuestion: true,
       isMultipleChoice: false,
-      isWritable: false,
       answers: [
         {
           id: 28,
@@ -990,7 +987,6 @@ export const reportData: Report [] = [{
       question: '¿La estación privada se encuentra más cercana a la estación más cercana al riesgo asegurado de la AEMET?',
       isYesNoQuestion: true,
       isMultipleChoice: false,
-      isWritable: false,
       answers: [
         {
           id: 30,
@@ -1011,7 +1007,6 @@ export const reportData: Report [] = [{
       question: '¿Se trata de un evento anormal que ha generado daños generalizados en la zona?',
       isYesNoQuestion: true,
       isMultipleChoice: false,
-      isWritable: false,
       answers: [
         {
           id: 32,

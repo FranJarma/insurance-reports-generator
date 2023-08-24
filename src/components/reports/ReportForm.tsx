@@ -12,7 +12,7 @@ export interface Input {
   name: string;
   value: string;
   suffix?: string;
-  type?: "number" | "mask" | "text";
+  type?: "number" | "mask" | "text" | "multiline";
 }
 export interface Answer {
   id: number;
@@ -20,7 +20,6 @@ export interface Answer {
   questionId: number;
   renderInput?: boolean;
   paragraphText?: string;
-  nextQuestion?: number; // Siguiente pregunta (si aplica)
 }
 
 export interface Question {
@@ -28,7 +27,6 @@ export interface Question {
   id: number;
   inputs?: Input [];
   isMultipleChoice: boolean;
-  isWritable: boolean;
   isYesNoQuestion: boolean;
   question: string;
 }
@@ -68,7 +66,7 @@ export const ReportForm: React.FC = () => {
     };
 
     if(paragraph) {
-      let resultParagraph = paragraph?.replaceAll('{answers}', mapAnswers.join(', ')).replaceAll('{date}', selectedDate!.toLocaleString('es', { day: '2-digit', month: '2-digit', year: 'numeric' }));
+      let resultParagraph = paragraph?.replace('{answers}', mapAnswers.join(', ')).replace('{date}', selectedDate!.toLocaleString('es', { day: '2-digit', month: '2-digit', year: 'numeric' }));
 
       setParagraphs([...paragraphs, resultParagraph]);
     }
@@ -110,8 +108,6 @@ export const ReportForm: React.FC = () => {
 
   const currentQuestion = selectedReport![currentQuestionIndex];
 
-  const { answers, isMultipleChoice, isYesNoQuestion } = currentQuestion;
-
   return (
     <Card>
       <div className="p-fluid grid">
@@ -138,15 +134,11 @@ export const ReportForm: React.FC = () => {
       {
         selectedDate ?
           <QuestionForm
-            answers={answers || []}
             currentQuestion={currentQuestion}
             currentCuestionIndex={currentQuestionIndex}
             handlePrevious={handlePrevious}
             handleNext={handleNext}
-            isMultipleChoice={isMultipleChoice}
-            isYesNoQuestion={isYesNoQuestion}
             onAnswerChange={handleAnswerChange}
-            question={currentQuestion}
             questions={windReportQuestions}
             selectedAnswers={selectedAnswers}
           />
