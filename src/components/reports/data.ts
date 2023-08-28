@@ -771,19 +771,19 @@ export const reportData: Report [] = [{
         {
           id: 8,
           questionId: 1,
-          answer: 'de piedra seca a 1 cara',
+          answer: 'De piedra seca a 1 cara',
           paragraphText: 'Se nos informa de daños en: {answers} debido a un fuerte vendaval ocurrido durante el día: {date}',
         },
         {
           id: 9,
           questionId: 1,
-          answer: 'de piedra seca a 2 caras',
+          answer: 'De piedra seca a 2 caras',
           paragraphText: 'Se nos informa de daños en: {answers}, debido a un fuerte vendaval ocurrido durante el día: {date}',
         },
         {
           id: 10,
           questionId: 1,
-          answer: 'de bloques de mares',
+          answer: 'De bloques de mares',
           paragraphText: 'Se nos informa de daños en: {answers}, debido a un fuerte vendaval ocurrido durante el día: {date}',
         },
         {
@@ -802,6 +802,7 @@ export const reportData: Report [] = [{
       isMultipleChoice: false,
       inputs: [
         {
+          id: 1,
           label: "Redactar",
           name: "manualRedaction1",
           type: "multiline",
@@ -932,11 +933,13 @@ export const reportData: Report [] = [{
       isMultipleChoice: false,
       inputs: [
         {
+          id: 2,
           label: "Estación meteorológica de la AEMET más cercana",
           name: "closestAemetStation",
           value: "",
         },
         {
+          id: 3,
           label: "Velocidad superada indicada en la AEMET (km/h)",
           name: "aemetSpeedLimit",
           suffix: "km/h",
@@ -955,7 +958,7 @@ export const reportData: Report [] = [{
           id: 26,
           questionId: 9,
           answer: 'Si',
-          paragraphText: 'Consultando datos de la AEMET constatamos que se produjeron rachas de viento con velocidades mayores a los {aemetSpeedLimit} Km/h en la estación ubicada en {closestAemetStation}, estación meteorológica más cercana al riesgo asegurado.'
+          paragraphText: 'Consultando datos de la AEMET constatamos que se produjeron rachas de viento con velocidades mayores a los {aemetSpeedLimit} km/h en la estación ubicada en {closestAemetStation}, estación meteorológica más cercana al riesgo asegurado.'
         },
         {
           id: 27,
@@ -984,43 +987,70 @@ export const reportData: Report [] = [{
     },
     {
       id: 11,
+      question: 'Datos AEMET',
+      isYesNoQuestion: false,
+      isMultipleChoice: false,
+      inputs: [
+        {
+          id: 4,
+          label: "Página consultada",
+          name: "consultedPage",
+          value: "",
+        },
+        {
+          id: 5,
+          label: "Estación meteorológica consultada",
+          name: "consultedStation",
+          value: "",
+        },
+        {
+          id: 6,
+          label: "Velocidad verificada",
+          name: "verifiedSpeed",
+          suffix: "km/h",
+          type: "number",
+          value: "0",
+        }
+      ]
+    },
+    {
+      id: 12,
       question: '¿La estación privada se encuentra más cercana a la estación más cercana al riesgo asegurado de la AEMET?',
       isYesNoQuestion: true,
       isMultipleChoice: false,
       answers: [
         {
           id: 30,
-          questionId: 11,
+          questionId: 12,
           answer: 'Si',
-          paragraphText: 'Consultando datos aportado por A constatamos que se produjeron rachas de viento con velocidades de hasta C Km/h en la estación ubicada en (B), estación meteorológica más cercana al riesgo asegurado. Si bien es una estación privada, se encuentra más cercana al riesgo asegurado a cualquier estación meteorológica de la AEMET.'
+          paragraphText: 'Consultando datos aportado por {consultedPage} constatamos que se produjeron rachas de viento con velocidades de hasta {verifiedSpeed} km/h en la estación ubicada en ({consultedStation}), estación meteorológica más cercana al riesgo asegurado. Si bien es una estación privada, se encuentra más cercana al riesgo asegurado a cualquier estación meteorológica de la AEMET.'
         },
         {
           id: 31,
-          questionId: 11,
+          questionId: 12,
           answer: 'No',
-          paragraphText: 'Consultando datos aportado por A constatamos que se produjeron rachas de viento con velocidades de hasta C Km/h en la estación ubicada en (B), estación meteorológica más cercana al riesgo asegurado. Destacar que la estación meteorológica de la AEMET se encuentra cercana al riesgo asegurado y, al no superar umbrales, tratándose de la estación oficial, dejamos a criterio de la compañía si procede el abono correspondiente de los daños considerando el registro de la estación meteorológica privada.'
+          paragraphText: 'Consultando datos aportado por {consultedPage} constatamos que se produjeron rachas de viento con velocidades de hasta {verifiedSpeed} km/h en la estación ubicada en ({consultedStation}), estación meteorológica más cercana al riesgo asegurado. Destacar que la estación meteorológica de la AEMET se encuentra cercana al riesgo asegurado y, al no superar umbrales, tratándose de la estación oficial, dejamos a criterio de la compañía si procede el abono correspondiente de los daños considerando el registro de la estación meteorológica privada.'
         }
       ],
     },
     {
-      id: 12,
+      id: 13,
       question: '¿Se trata de un evento anormal que ha generado daños generalizados en la zona?',
       isYesNoQuestion: true,
       isMultipleChoice: false,
       answers: [
         {
           id: 32,
-          questionId: 12,
+          questionId: 13,
           answer: 'Si',
           paragraphText: 'Debemos indicar que no existen registros de superación de umbrales, sin embargo, sabemos que en la fecha del siniestro ha ocurrido un fuerte vendaval generando cuantiosos daños en toda la zona donde se encuentra el riesgo asegurado tratandose de un evento anormal superando con certeza velocidades de viento importantes.'
         },
         {
           id: 33,
-          questionId: 12,
+          questionId: 13,
           answer: 'No',
           paragraphText: 'Consultando datos aportados por la AEMET, no se constata el registro de vientos anormales en la estación meteorológica más cercana al riesgo asegurado, estación ubicada en X, como tampoco en las estaciones privadas tanto en Balearsmeteo como en Meteoclimatic. Tampoco tenemos constancia de un evento importante generando daños generalizados.'
         }
       ],
     },
-    // ... other questions
   ];

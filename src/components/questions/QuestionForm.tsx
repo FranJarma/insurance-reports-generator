@@ -7,6 +7,7 @@ import { Button } from 'primereact/button';
 import { PrimeIcons } from 'primereact/api';
 import { InputText } from 'primereact/inputtext';
 import { InputNumber, InputNumberChangeEvent } from 'primereact/inputnumber';
+import { calculateColumnClass } from '../../helpers/design';
 
 interface QuestionFormProps {
   currentQuestion: Question;
@@ -32,13 +33,22 @@ export const QuestionForm: React.FC<QuestionFormProps> = ({
 
   const { answers, id, isMultipleChoice, isYesNoQuestion, inputs } = currentQuestion;
 
-  const handleInputChange = (inputName: string, value: string) => {
-    console.log(inputTextValues);
+  const handleInputChange = (inputName: string, value: string, answerId: number) => {
     setInputTextValues({
       ...inputTextValues,
       [inputName] : value
     });
-  
+    
+    const updatedSelectedAnswers = selectedAnswers.filter((a) => a.questionId !== id);
+    const newAnswer = {
+      answer: value,
+      id: answerId,
+      paragraphText: value,
+      questionId: id
+    };
+
+    updatedSelectedAnswers.push(newAnswer);
+    onAnswerChange(updatedSelectedAnswers);
   };
   
   const handleYesNoChange = (answer: Answer) => {
@@ -89,14 +99,14 @@ export const QuestionForm: React.FC<QuestionFormProps> = ({
       <h4 className="col-12">{currentQuestion.question}</h4>
       {
         inputs ? inputs?.map(input => (
-          <div className={inputs.length > 1 ? "col-12 lg:col-6" : "col-12"}>
+          <div key={input.name} className={calculateColumnClass(inputs.length)}>
             <label htmlFor={input.name} className="block mb-2">{input.label}</label>
             {
               input.type === "number" ?
               <InputNumber
                 id={input.name}
                 name={input.name} 
-                onChange={(e: InputNumberChangeEvent) => handleInputChange(input.name, e.value!.toString())}
+                onChange={(e: InputNumberChangeEvent) => handleInputChange(input.name, e.value!.toString(), input.id)}
                 placeholder="Redactar"
                 suffix={input.suffix ?? ""}
                 value={Number(inputTextValues[input.name])}
@@ -106,7 +116,7 @@ export const QuestionForm: React.FC<QuestionFormProps> = ({
                 cols={12}
                 id={input.name}
                 name={input.name} 
-                onChange={(e: ChangeEvent<HTMLTextAreaElement>) => handleInputChange(input.name, e.target.value)}
+                onChange={(e: ChangeEvent<HTMLTextAreaElement>) => handleInputChange(input.name, e.target.value, input.id)}
                 placeholder="Redactar"
                 rows={12}
                 value={inputTextValues[input.name]}/>
@@ -115,7 +125,7 @@ export const QuestionForm: React.FC<QuestionFormProps> = ({
                 className="mb-4"
                 id={input.name}
                 name={input.name}
-                onChange={(e: ChangeEvent<HTMLInputElement>) => handleInputChange(input.name, e.target.value)}
+                onChange={(e: ChangeEvent<HTMLInputElement>) => handleInputChange(input.name, e.target.value, input.id)}
                 value={inputTextValues[input.name]}
             />
             }
@@ -123,7 +133,7 @@ export const QuestionForm: React.FC<QuestionFormProps> = ({
         ))
       :
       answers!.map((answer) => (
-        <div className="field-checkbox col-6 gap-1" key={answer.answer}>
+        <div className="field-checkbox col-6 gap-1" key={answer.id}>
           {isYesNoQuestion && !isMultipleChoice ? (
             <RadioButton
               className="field-radiobutton"
@@ -162,7 +172,7 @@ export const QuestionForm: React.FC<QuestionFormProps> = ({
           <Button icon={PrimeIcons.CHEVRON_CIRCLE_LEFT} outlined onClick={handlePrevious} disabled={currentCuestionIndex === 0}>
             Anterior
           </Button>
-          <Button icon={PrimeIcons.CHEVRON_CIRCLE_RIGHT} severity="success" onClick={handleNext} disabled={currentCuestionIndex === questions.length - 1 || (selectedAnswers.filter(a => a.questionId === currentQuestion.id).length === 0) || (inputs?.length > 0 && Object.values(inputTextValues).every(value => value.trim() !== ''))}>
+          <Button icon={PrimeIcons.CHEVRON_CIRCLE_RIGHT} severity="success" onClick={handleNext} disabled={currentCuestionIndex === questions.length - 1 || (!inputs && selectedAnswers.filter(a => a.questionId === currentQuestion.id).length === 0)}>
             Siguiente
           </Button>
         </div>

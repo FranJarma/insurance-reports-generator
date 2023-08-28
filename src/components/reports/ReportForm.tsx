@@ -8,6 +8,7 @@ import { QuestionForm } from '../questions/QuestionForm';
 import { windReportQuestions } from './data';
 
 export interface Input {
+  id: number;
   label: string;
   name: string;
   value: string;
@@ -62,7 +63,8 @@ export const ReportForm: React.FC = () => {
       '7': 8,
       '8': 9,
       '9': mapIdAnswers.includes(27) ? 10 : null,
-      '10': mapIdAnswers.includes(28) ? 11 : 12
+      '10': mapIdAnswers.includes(28) ? 11 : 12,
+      '11': 12
     };
 
     if(paragraph) {
@@ -94,7 +96,9 @@ export const ReportForm: React.FC = () => {
       '8': mapIdAnswers.includes(17) ? 7 : 6,
       '9': 8,
       '10': 9,
-      '11': 10
+      '11': 10,
+      '12': 11,
+      '13': 11
     };
 
     const prevIndex = prevQuestionMapping[currentQuestionIndex.toString()];
