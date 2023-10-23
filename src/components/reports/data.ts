@@ -803,7 +803,6 @@ export const reportData: Report [] = [{
       inputs: [
         {
           id: 1,
-          label: "Redactar",
           name: "manualRedaction1",
           type: "multiline",
           value: "",

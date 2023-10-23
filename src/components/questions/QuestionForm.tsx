@@ -7,7 +7,7 @@ import { Button } from 'primereact/button';
 import { PrimeIcons } from 'primereact/api';
 import { InputText } from 'primereact/inputtext';
 import { InputNumber, InputNumberChangeEvent } from 'primereact/inputnumber';
-import { calculateColumnClass } from '../../helpers/design';
+import { calculateColumnClass } from '../../helpers';
 
 interface QuestionFormProps {
   currentQuestion: Question;
@@ -19,18 +19,10 @@ interface QuestionFormProps {
   onAnswerChange: (selectedAnswers: Array<Answer>) => void;
 }
 
-export const QuestionForm: React.FC<QuestionFormProps> = ({
-  currentQuestion,
-  currentCuestionIndex,
-  questions,
-  selectedAnswers,
-  handlePrevious,
-  handleNext,
-  onAnswerChange,
-}) => {
+export const QuestionForm: React.FC<QuestionFormProps> = (props) => {
   const [selectedYesNoMap, setSelectedYesNoMap] = useState<{ [key: string]: string | null }>({});
   const [inputTextValues, setInputTextValues] = useState<{ [key: string]: string }>({});
-
+  const { currentQuestion, currentCuestionIndex, questions, selectedAnswers, handlePrevious, handleNext, onAnswerChange } = props;
   const { answers, id, isMultipleChoice, isYesNoQuestion, inputs } = currentQuestion;
 
   const handleInputChange = (inputName: string, value: string, answerId: number) => {
@@ -113,6 +105,7 @@ export const QuestionForm: React.FC<QuestionFormProps> = ({
               />
               : input.type === "multiline" ?
               <InputTextarea
+                autoResize 
                 cols={12}
                 id={input.name}
                 name={input.name} 
@@ -168,7 +161,7 @@ export const QuestionForm: React.FC<QuestionFormProps> = ({
         </div>
       ))}
       <React.Fragment>
-        <div className="flex md:w-6 md:flex-row w-full flex-column ml-auto gap-5">
+        <div className="flex md:w-4 md:flex-row w-full flex-column ml-auto gap-5">
           <Button icon={PrimeIcons.CHEVRON_CIRCLE_LEFT} outlined onClick={handlePrevious} disabled={currentCuestionIndex === 0}>
             Anterior
           </Button>

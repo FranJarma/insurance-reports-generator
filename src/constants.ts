@@ -1,7 +1,7 @@
 import { MenuItem } from 'primereact/menuitem';
 import { PrimeIcons } from 'primereact/api';
 
-export const MENU_ITEMS: MenuItem [] = [
+export const menuItems: MenuItem [] = [
     {
         icon: PrimeIcons.HOME,
         label: "Inicio",

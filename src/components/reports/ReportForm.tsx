@@ -1,15 +1,17 @@
 import React, { useState } from 'react';
 import { Card } from 'primereact/card';
-import { Dropdown } from 'primereact/dropdown';
-import { Calendar, CalendarChangeEvent } from 'primereact/calendar';
 import { ReportType } from '../../interfaces/ReportType';
 import { Insured } from '../../interfaces/Insured';
 import { QuestionForm } from '../questions/QuestionForm';
 import { windReportQuestions } from './data';
+import { Button } from 'primereact/button';
+import { Dialog } from 'primereact/dialog';
+import { handleNextQuestionMapping, handlePreviousQuestionMapping } from '../../helpers';
+import { FormFilter } from './FormFilter';
 
 export interface Input {
   id: number;
-  label: string;
+  label?: string;
   name: string;
   value: string;
   suffix?: string;
@@ -34,14 +36,13 @@ export interface Question {
 
 export const ReportForm: React.FC = () => {
   const [selectedAnswers, setSelectedAnswers] = useState<Answer[]>([]);
-  const [selectedReportType, setSelectedReportType] = useState<ReportType[]>([]);
-  const [selectedInsured, setSelectedInsured] = useState<Insured[]>();
-  const [selectedDate, setSelectedDate] = useState<string | Date | Date[]>();
   const [selectedReport, setSelectedReport] = useState<Question[]>(windReportQuestions);
-  
+  const [selectedInsured, setSelectedInsured] = useState<Insured | undefined>();
+  const [selectedDate, setSelectedDate] = useState<string | Date | undefined>();
+  const [selectedReportType, setSelectedReportType] = useState<ReportType | undefined>();
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-
   const [paragraphs, setParagraphs] = useState<string[]>([]);
+  const [previewDialog, setPreviewDialog] = useState(false);
 
   const handleAnswerChange = (value: Array<Answer>) => {
     setSelectedAnswers(value);
@@ -52,20 +53,7 @@ export const ReportForm: React.FC = () => {
     const mapIdAnswers = selectedAnswers.map(answer => answer.id);
     const mapAnswers = selectedAnswers.map(answer => answer.answer);
     
-    const nextQuestionMapping: { [key: string]: number | null } = {
-      '0': mapIdAnswers.includes(6) ? 1 : 2,
-      '1': 2,
-      '2': mapIdAnswers.includes(3) ? 3 : 5,
-      '3': 4,
-      '4': 5,
-      '5': mapIdAnswers.includes(16) ? 6 : 7,
-      '6': 7,
-      '7': 8,
-      '8': 9,
-      '9': mapIdAnswers.includes(27) ? 10 : null,
-      '10': mapIdAnswers.includes(28) ? 11 : 12,
-      '11': 12
-    };
+    const nextQuestionMapping = handleNextQuestionMapping(selectedReportType!, mapIdAnswers);
 
     if(paragraph) {
       let resultParagraph = paragraph?.replace('{answers}', mapAnswers.join(', ')).replace('{date}', selectedDate!.toLocaleString('es', { day: '2-digit', month: '2-digit', year: 'numeric' }));
@@ -73,8 +61,8 @@ export const ReportForm: React.FC = () => {
       setParagraphs([...paragraphs, resultParagraph]);
     }
 
-
     const nextIndex = nextQuestionMapping[currentQuestionIndex.toString()];
+
     if (nextIndex !== null) {
       setCurrentQuestionIndex(nextIndex);
     } else {
@@ -85,24 +73,10 @@ export const ReportForm: React.FC = () => {
   const handlePrevious = () => {
     const mapIdAnswers = selectedAnswers.map(answer => answer.id);
 
-    const prevQuestionMapping: { [key: string]: number | null } = {
-      '1': 0,
-      '2': mapIdAnswers.includes(6) ? 1 : 0,
-      '3': 2,
-      '4': 3,
-      '5': mapIdAnswers.includes(3) ? 4 : 2,
-      '6': 5,
-      '7': 5,
-      '8': mapIdAnswers.includes(17) ? 7 : 6,
-      '9': 8,
-      '10': 9,
-      '11': 10,
-      '12': 11,
-      '13': 11
-    };
+    const prevQuestionMapping = handlePreviousQuestionMapping(selectedReportType!, mapIdAnswers);
 
     const prevIndex = prevQuestionMapping[currentQuestionIndex.toString()];
-    console.log({prevIndex});
+
     if (prevIndex !== null) {
       setCurrentQuestionIndex(prevIndex);
     } else {
@@ -115,42 +89,42 @@ export const ReportForm: React.FC = () => {
   return (
     <Card>
       <div className="p-fluid grid">
-        <div className="field col-12 md:col-4">
-            <span className="p-float-label">
-              <Dropdown value={selectedReportType} onChange={(e) => setSelectedReportType(e.value)} optionLabel="name"
-                filter className="w-full" />
-                <label htmlFor="ac">Tipo de Informe</label>
-            </span>
-          </div>
-          <div className="field col-12 md:col-4">
-            <span className="p-float-label">
-              <Dropdown value={selectedInsured} onChange={(e) => setSelectedInsured(e.value)}  optionLabel="fullname"
-                filter className="w-full" />
-                <label htmlFor="ac">Asegurado</label>
-            </span>
-          </div>
-          <div className="field col-12 md:col-4">
-            <span className="p-float-label">
-              <Calendar className="w-full" inputId="date" locale="es" value={selectedDate} onChange={(e: CalendarChangeEvent) => e.value && setSelectedDate(e.value)} showIcon maxDate={new Date()} />
-              <label htmlFor="date">Fecha</label>
-            </span>
-          </div>
-      {
-        selectedDate ?
-          <QuestionForm
-            currentQuestion={currentQuestion}
-            currentCuestionIndex={currentQuestionIndex}
-            handlePrevious={handlePrevious}
-            handleNext={handleNext}
-            onAnswerChange={handleAnswerChange}
-            questions={windReportQuestions}
-            selectedAnswers={selectedAnswers}
-          />
-      : <span>Seleccione tipo de informe, asegurado y fecha</span>
-      }
-        <div className="field col-12">
-          <p className="text-red-500">{JSON.stringify(paragraphs)}</p>
-        </div>
+        <FormFilter
+          currentQuestionIndex={currentQuestionIndex}
+          selectedDate={selectedDate}
+          selectedInsured={selectedInsured}
+          selectedReportType={selectedReportType}
+          setSelectedDate={setSelectedDate}
+          setSelectedInsured={setSelectedInsured}
+          setSelectedReportType={setSelectedReportType}
+        />
+          <Dialog header="Vista previa del informe" maximizable style={{ width: '50vw' }} draggable={false} visible={previewDialog} onHide={() => setPreviewDialog(false)}>
+            <div className="field col-12">
+              {
+                paragraphs.map((paragraph: string) => (
+                  <p className="text-red-500 mb-5">{paragraph}</p>
+                ))
+              }
+            </div>
+          </Dialog>
+          {
+            selectedDate ?
+            <>
+              <div className="field col-12 md:col-1">
+                <Button onClick={() => setPreviewDialog(true)} text icon="pi pi-eye" title='Vista previa'/>
+              </div>
+              <QuestionForm
+                currentQuestion={currentQuestion}
+                currentCuestionIndex={currentQuestionIndex}
+                handlePrevious={handlePrevious}
+                handleNext={handleNext}
+                onAnswerChange={handleAnswerChange}
+                questions={windReportQuestions}
+                selectedAnswers={selectedAnswers}
+              />
+            </>
+          : <div className="field col-12">Seleccione tipo de informe, asegurado y fecha</div>
+          }
       </div>
     </Card>
   );

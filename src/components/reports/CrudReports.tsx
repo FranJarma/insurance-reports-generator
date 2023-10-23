@@ -1,4 +1,3 @@
-import React from 'react'
 import { DatatableColumn } from '../../interfaces'
 import { Crud } from '../Crud'
 import { reportData } from './data';

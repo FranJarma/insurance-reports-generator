@@ -1,10 +1,12 @@
 import React, { useState } from 'react'
 import { Sidebar } from 'primereact/sidebar';
-import { Menu } from 'primereact/menu';
-import { HOME_ROUTE, MENU_ITEMS } from '../constants';
+import { HOME_ROUTE, menuItems } from '../constants';
 import { BreadCrumb } from 'primereact/breadcrumb';
 import { PrimeIcons } from 'primereact/api';
-import { useLocation } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
+import { MenuItem } from 'primereact/menuitem';
+import '../index.css'
+import { Avatar } from 'primereact/avatar';
 
 interface LayoutProps {
   children: React.ReactNode
@@ -64,7 +66,16 @@ export const Layout = ({children}: LayoutProps) => {
           <MyBreadcrumb />
           <Sidebar visible={sidebarVisible} onHide={() => setSidebarVisible(false)}>
               <h3>Generador de <b>Informes Periciales</b></h3>
-              <Menu model={MENU_ITEMS}/>
+              <ul className='side__menu'>
+                {
+                  menuItems.map((menuItem: MenuItem) => (
+                      <li><Link className='side__menu__link' to={menuItem.url!}><i className={menuItem.icon}></i>{menuItem.label}</Link></li>
+                  ))
+                }
+              </ul>
+              <section className='side__user'>
+                <Avatar style={{ backgroundColor: '#bcbdf9', color: '#282960' }} icon="pi pi-user" size="large" shape="square" /><span className='side__user__name'>Francisco Jarma</span>
+              </section>
           </Sidebar>
         </aside>
         <main>
