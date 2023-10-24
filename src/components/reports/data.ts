@@ -896,22 +896,22 @@ export const reportData: Report [] = [{
         {
           id: 20,
           questionId: 7,
-          answer: 'Mayor a los 70 km/h',
+          answer: 'Mayor a los 70 Km/h',
         },
         {
           id: 21,
           questionId: 7,
-          answer: 'Mayor a los 80 km/h',
+          answer: 'Mayor a los 80 Km/h',
         },
         {
           id: 22,
           questionId: 7,
-          answer: 'Mayor a los 90 km/h',
+          answer: 'Mayor a los 90 Km/h',
         },
         {
           id: 23,
           questionId: 7,
-          answer: 'Mayor a los 96 km/h',
+          answer: 'Mayor a los 96 Km/h',
         },
         {
           id: 24,
@@ -939,11 +939,11 @@ export const reportData: Report [] = [{
         },
         {
           id: 3,
-          label: "Velocidad superada indicada en la AEMET (km/h)",
+          label: "Velocidad superada indicada en la AEMET",
           name: "aemetSpeedLimit",
-          suffix: "km/h",
-          type: "number",
-          value: "0",
+          value: "",
+          suffix: "Km/h",
+          type: "number"
         }
       ]
     },
@@ -957,7 +957,7 @@ export const reportData: Report [] = [{
           id: 26,
           questionId: 9,
           answer: 'Si',
-          paragraphText: 'Consultando datos de la AEMET constatamos que se produjeron rachas de viento con velocidades mayores a los {aemetSpeedLimit} km/h en la estación ubicada en {closestAemetStation}, estación meteorológica más cercana al riesgo asegurado.'
+          paragraphText: 'Consultando datos de la AEMET constatamos que se produjeron rachas de viento con velocidades mayores a los {aemetSpeedLimit} Km/h en la estación ubicada en {closestAemetStation}, estación meteorológica más cercana al riesgo asegurado.'
         },
         {
           id: 27,
@@ -1006,9 +1006,9 @@ export const reportData: Report [] = [{
           id: 6,
           label: "Velocidad verificada",
           name: "verifiedSpeed",
-          suffix: "km/h",
-          type: "number",
-          value: "0",
+          value: "",
+          suffix: "Km/h",
+          type: "number"
         }
       ]
     },
@@ -1022,13 +1022,13 @@ export const reportData: Report [] = [{
           id: 30,
           questionId: 12,
           answer: 'Si',
-          paragraphText: 'Consultando datos aportado por {consultedPage} constatamos que se produjeron rachas de viento con velocidades de hasta {verifiedSpeed} km/h en la estación ubicada en ({consultedStation}), estación meteorológica más cercana al riesgo asegurado. Si bien es una estación privada, se encuentra más cercana al riesgo asegurado a cualquier estación meteorológica de la AEMET.'
+          paragraphText: 'Consultando datos aportado por {consultedPage} constatamos que se produjeron rachas de viento con velocidades de hasta {verifiedSpeed} Km/h en la estación ubicada en ({consultedStation}), estación meteorológica más cercana al riesgo asegurado. Si bien es una estación privada, se encuentra más cercana al riesgo asegurado a cualquier estación meteorológica de la AEMET.'
         },
         {
           id: 31,
           questionId: 12,
           answer: 'No',
-          paragraphText: 'Consultando datos aportado por {consultedPage} constatamos que se produjeron rachas de viento con velocidades de hasta {verifiedSpeed} km/h en la estación ubicada en ({consultedStation}), estación meteorológica más cercana al riesgo asegurado. Destacar que la estación meteorológica de la AEMET se encuentra cercana al riesgo asegurado y, al no superar umbrales, tratándose de la estación oficial, dejamos a criterio de la compañía si procede el abono correspondiente de los daños considerando el registro de la estación meteorológica privada.'
+          paragraphText: 'Consultando datos aportado por {consultedPage} constatamos que se produjeron rachas de viento con velocidades de hasta {verifiedSpeed} Km/h en la estación ubicada en ({consultedStation}), estación meteorológica más cercana al riesgo asegurado. Destacar que la estación meteorológica de la AEMET se encuentra cercana al riesgo asegurado y, al no superar umbrales, tratándose de la estación oficial, dejamos a criterio de la compañía si procede el abono correspondiente de los daños considerando el registro de la estación meteorológica privada.'
         }
       ],
     },

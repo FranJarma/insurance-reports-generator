@@ -69,7 +69,7 @@ export const Layout = ({children}: LayoutProps) => {
               <ul className='side__menu'>
                 {
                   menuItems.map((menuItem: MenuItem) => (
-                      <li><Link className='side__menu__link' to={menuItem.url!}><i className={menuItem.icon}></i>{menuItem.label}</Link></li>
+                      <li key={menuItem.label}><Link className='side__menu__link' to={menuItem.url!}><i className={menuItem.icon}></i>{menuItem.label}</Link></li>
                   ))
                 }
               </ul>

@@ -1,6 +1,6 @@
-import { ReportType } from '../../interfaces/ReportType';
-export const handleNextQuestionMapping = (selectedReportType: ReportType, mapIdAnswers: number []) => {
-    let nextQuestionMapping;
+import { ReportType } from '../interfaces/ReportType';
+export const handleNextQuestionMapping = (selectedReportType: ReportType, mapIdAnswers: number []): { [key: string]: string } => {
+    let nextQuestionMapping = {};
     if(selectedReportType.name === "Viento"){
         nextQuestionMapping = {
             '0': mapIdAnswers.includes(6) ? 1 : 2,
@@ -20,8 +20,8 @@ export const handleNextQuestionMapping = (selectedReportType: ReportType, mapIdA
     return nextQuestionMapping;
 }
 
-export const handlePreviousQuestionMapping = (selectedReportType: ReportType, mapIdAnswers: number []) => {
-    let previousQuestionMapping;
+export const handlePreviousQuestionMapping = (selectedReportType: ReportType, mapIdAnswers: number []): { [key: string]: string } => {
+    let previousQuestionMapping = {};
     if(selectedReportType.name === "Viento"){
         previousQuestionMapping = {
             '1': 0,
@@ -40,4 +40,7 @@ export const handlePreviousQuestionMapping = (selectedReportType: ReportType, ma
           };
     }
     return previousQuestionMapping;
+}
+export const replaceParagraphs = (paragraph: string, stringToReplace: string, replaceItem: string) => {
+    return paragraph?.replace(stringToReplace, replaceItem);
 }

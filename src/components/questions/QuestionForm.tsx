@@ -11,18 +11,21 @@ import { calculateColumnClass } from '../../helpers';
 
 interface QuestionFormProps {
   currentQuestion: Question;
-  currentCuestionIndex: number;
+  currentQuestionIndex: number;
+  paragraphs: string [];
+  nextParagraph: string | undefined;
   questions: Array<Question>,
   selectedAnswers: Array<Answer>;
   handleNext: () => void;
   handlePrevious: () => void;
   onAnswerChange: (selectedAnswers: Array<Answer>) => void;
+  setParagraphs:  React.Dispatch<React.SetStateAction<string[]>>
 }
 
 export const QuestionForm: React.FC<QuestionFormProps> = (props) => {
   const [selectedYesNoMap, setSelectedYesNoMap] = useState<{ [key: string]: string | null }>({});
   const [inputTextValues, setInputTextValues] = useState<{ [key: string]: string }>({});
-  const { currentQuestion, currentCuestionIndex, questions, selectedAnswers, handlePrevious, handleNext, onAnswerChange } = props;
+  const { currentQuestion, currentQuestionIndex, nextParagraph, paragraphs, questions, selectedAnswers, handlePrevious, handleNext, onAnswerChange, setParagraphs } = props;
   const { answers, id, isMultipleChoice, isYesNoQuestion, inputs } = currentQuestion;
 
   const handleInputChange = (inputName: string, value: string, answerId: number) => {
@@ -38,7 +41,11 @@ export const QuestionForm: React.FC<QuestionFormProps> = (props) => {
       paragraphText: value,
       questionId: id
     };
-
+    if(inputs && inputs.length > 0) {
+      console.log({nextParagraph, inputName, value})
+      const resultParagraph = nextParagraph?.replace(`{${inputName}}`, value)
+      setParagraphs([...paragraphs, resultParagraph]);
+    }
     updatedSelectedAnswers.push(newAnswer);
     onAnswerChange(updatedSelectedAnswers);
   };
@@ -162,10 +169,10 @@ export const QuestionForm: React.FC<QuestionFormProps> = (props) => {
       ))}
       <React.Fragment>
         <div className="flex md:w-4 md:flex-row w-full flex-column ml-auto gap-5">
-          <Button icon={PrimeIcons.CHEVRON_CIRCLE_LEFT} outlined onClick={handlePrevious} disabled={currentCuestionIndex === 0}>
+          <Button icon={PrimeIcons.CHEVRON_CIRCLE_LEFT} outlined onClick={handlePrevious} disabled={currentQuestionIndex === 0}>
             Anterior
           </Button>
-          <Button icon={PrimeIcons.CHEVRON_CIRCLE_RIGHT} severity="success" onClick={handleNext} disabled={currentCuestionIndex === questions.length - 1 || (!inputs && selectedAnswers.filter(a => a.questionId === currentQuestion.id).length === 0)}>
+          <Button icon={PrimeIcons.CHEVRON_CIRCLE_RIGHT} severity="success" onClick={handleNext} disabled={currentQuestionIndex === questions.length - 1 || (!inputs && selectedAnswers.filter(a => a.questionId === currentQuestion.id).length === 0)}>
             Siguiente
           </Button>
         </div>

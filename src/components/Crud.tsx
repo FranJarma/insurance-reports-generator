@@ -234,9 +234,9 @@ export const Crud = (props: CrudProps) => {
      const actionBodyTemplate = (rowData: Product) => {
          return (
              <div className="dt-buttons">
-                 <Button icon="pi pi-pencil" title="Editar" size="small" rounded text raised onClick={() => editProduct(rowData)} />
-                 <Button icon="pi pi-file-word" title="Imprimir docx" size="small" rounded text raised severity="info" onClick={() => confirmDeleteProduct(rowData)} />
-                 <Button icon="pi pi-trash" title="Eliminar" size="small" rounded text raised severity="danger" onClick={() => confirmDeleteProduct(rowData)} />
+                 <Button icon="pi pi-pencil" tooltip="Editar" tooltipOptions={{ position: 'bottom' }} size="small" rounded text raised onClick={() => editProduct(rowData)} />
+                 <Button icon="pi pi-file-word" tooltip="Imprimir docx" tooltipOptions={{ position: 'bottom' }} size="small" rounded text raised severity="info" onClick={() => confirmDeleteProduct(rowData)} />
+                 <Button icon="pi pi-trash" tooltip="Eliminar" tooltipOptions={{ position: 'bottom' }} size="small" rounded text raised severity="danger" onClick={() => confirmDeleteProduct(rowData)} />
              </div>
          );
      };
