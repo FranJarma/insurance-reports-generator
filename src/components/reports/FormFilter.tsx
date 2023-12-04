@@ -1,22 +1,29 @@
 import { Calendar, CalendarChangeEvent } from 'primereact/calendar'
-import { Dropdown } from 'primereact/dropdown'
+import { Dropdown, DropdownChangeEvent } from 'primereact/dropdown'
 import { Insured } from '../../interfaces';
-import { FC } from 'react';
+import { FC, useEffect } from 'react';
 import { ReportType } from '../../interfaces/ReportType';
+import { fireReportQuestions, waterReportQuestions, windReportQuestions } from './data';
+import { Question } from './ReportForm';
 
 interface FormFilterProps {
     currentQuestionIndex: number;
     selectedReportType: ReportType | undefined;
     selectedInsured: Insured | undefined;
     selectedDate: string | Date | undefined;
-    setSelectedReportType: React.Dispatch<React.SetStateAction<ReportType | undefined>>;
-    setSelectedInsured: React.Dispatch<React.SetStateAction<Insured | undefined>>;
     setSelectedDate: React.Dispatch<React.SetStateAction<string | Date | undefined>>;
+    setSelectedInsured: React.Dispatch<React.SetStateAction<Insured | undefined>>;
+    setSelectedReportType: React.Dispatch<React.SetStateAction<ReportType | undefined>>;
+    setSelectedQuestionnaire: React.Dispatch<React.SetStateAction<Question []>>;
 }
 
 export const FormFilter: FC<FormFilterProps> = (props) => {
 
-    const { currentQuestionIndex, selectedReportType, selectedInsured, selectedDate, setSelectedReportType, setSelectedInsured, setSelectedDate } = props;
+    useEffect(() => {
+      setSelectedReportType(reportTypes[0])
+    }, []);
+
+    const { currentQuestionIndex, selectedReportType, selectedInsured, selectedDate, setSelectedReportType, setSelectedInsured, setSelectedDate, setSelectedQuestionnaire } = props;
 
     const reportTypes: ReportType [] = [
         {
@@ -48,11 +55,26 @@ export const FormFilter: FC<FormFilterProps> = (props) => {
       }
     ];
 
+    type ReportTarget = {
+      [key: string]: Question []
+    }
+
+    const selectedReportTargetValue: ReportTarget = {
+      'Viento': windReportQuestions,
+      'Agua': waterReportQuestions,
+      'Fuego': fireReportQuestions
+    };
+
+    const handleChangeReportType = (e: DropdownChangeEvent) => {
+      setSelectedReportType(e.target.value);
+      setSelectedQuestionnaire(selectedReportTargetValue[e.target.value])
+    }
+    
     return (
         <>
             <div className="field col-12 md:col-4">
                 <span className="p-float-label">
-                <Dropdown disabled={currentQuestionIndex > 0 ? true : false} options={reportTypes} value={selectedReportType} onChange={(e) => setSelectedReportType(e.value)} optionLabel="name"
+                <Dropdown disabled={currentQuestionIndex > 0 ? true : false} options={reportTypes} value={selectedReportType} onChange={handleChangeReportType} optionLabel="name"
                     filter className="w-full" />
                     <label htmlFor="ac">Tipo de Informe</label>
                 </span>
@@ -64,7 +86,7 @@ export const FormFilter: FC<FormFilterProps> = (props) => {
                     <label htmlFor="ac">Asegurado</label>
                 </span>
             </div>
-            <div className="field col-12 md:col-3">
+            <div className="field col-9 md:col-3">
                 <span className="p-float-label">
                 <Calendar disabled={currentQuestionIndex > 0 ? true : false} className="w-full" inputId="date" locale="es" value={selectedDate} onChange={(e: CalendarChangeEvent) => e.value && setSelectedDate(e.value)} showIcon maxDate={new Date()} />
                 <label htmlFor="date">Fecha</label>

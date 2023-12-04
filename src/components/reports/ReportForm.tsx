@@ -30,17 +30,18 @@ export interface Answer {
 }
 
 export interface Question {
-  answers?: Answer[];
   id: number;
-  inputs?: Input [];
   isMultipleChoice: boolean;
   isYesNoQuestion: boolean;
   question: string;
+  answers?: Answer[];
+  inputs?: Input [];
+  renderParagraph?: boolean;
 }
 
 export const ReportForm: React.FC = () => {
   const [selectedAnswers, setSelectedAnswers] = useState<Answer[]>([]);
-  const [selectedReport, setSelectedReport] = useState<Question[]>(windReportQuestions);
+  const [selectedQuestionnaire, setSelectedQuestionnaire] = useState<Question[]>(windReportQuestions);
   const [selectedInsured, setSelectedInsured] = useState<Insured | undefined>();
   const [selectedDate, setSelectedDate] = useState<string | Date | undefined>();
   const [selectedReportType, setSelectedReportType] = useState<ReportType | undefined>();
@@ -49,10 +50,10 @@ export const ReportForm: React.FC = () => {
   const [previewDialog, setPreviewDialog] = useState(false);
   const [selectedYesNoMap, setSelectedYesNoMap] = useState<{ [key: string]: string | null }>({});
   const [inputTextValues, setInputTextValues] = useState<{ [key: string]: string }>({});
-  const currentQuestion = selectedReport![currentQuestionIndex];
+  const currentQuestion = selectedQuestionnaire[currentQuestionIndex] ?? {};
   const keysRegex = /{([^}]+)}/g;
 
-  const { answers, id, isMultipleChoice, isYesNoQuestion, inputs } = currentQuestion ?? {};
+  const { answers, id, isMultipleChoice, isYesNoQuestion, inputs, renderParagraph } = currentQuestion ?? {};
 
   const handleAnswerChange = (value: Array<Answer>) => {
     setSelectedAnswers(value);
@@ -65,7 +66,7 @@ export const ReportForm: React.FC = () => {
     });
     
     const updatedSelectedAnswers = selectedAnswers.filter((a) => a.questionId !== id);
-    if(inputs?.length === 0){
+    if(renderParagraph){
       const newAnswer = {
         answer: value,
         id: answerId,
@@ -76,6 +77,7 @@ export const ReportForm: React.FC = () => {
     }
 
     handleAnswerChange(updatedSelectedAnswers);
+
   };
   
   const handleYesNoChange = (answer: Answer) => {
@@ -111,6 +113,7 @@ export const ReportForm: React.FC = () => {
     }
     // Si la respuesta ya está en updatedSelectedAnswers, quitarla
     const existingIndex = updatedSelectedAnswers.findIndex((a) => a.id === answer.id);
+
     if (existingIndex !== -1) {
       updatedSelectedAnswers.splice(existingIndex, 1);
     } else {
@@ -124,21 +127,21 @@ export const ReportForm: React.FC = () => {
   const handleNext = () => {
     const paragraph = selectedAnswers[selectedAnswers.length - 1].paragraphText!;
     const mapIdAnswers = selectedAnswers.map(answer => answer.id);
-    const mapAnswers = selectedAnswers.map(answer => answer.answer);
+    const mapAnswers = selectedAnswers.map(answer => answer.answer.toLocaleLowerCase());
     const nextQuestionMapping = handleNextQuestionMapping(selectedReportType!, mapIdAnswers);
 
-    if(paragraph) {
+    const existingQuestion = selectedAnswers.findIndex((a) => a.questionId === currentQuestion.id);
+
+    if(paragraph && existingQuestion !== -1) {
       let resultParagraph = replaceParagraphs(paragraph, '{answers}', mapAnswers.join(','));
-      resultParagraph = replaceParagraphs(paragraph, '{date}', selectedDate!.toLocaleString('es', { day: '2-digit', month: '2-digit', year: 'numeric' }));
+      resultParagraph = replaceParagraphs(resultParagraph, '{date}', selectedDate!.toLocaleString('es', { day: '2-digit', month: '2-digit', year: 'numeric' }));
       
       const matches = findMatchesByRegex(keysRegex, resultParagraph);
-
       if(matches.length > 0){
         matches.map((match) => {
-          resultParagraph = replaceParagraphs(paragraph, `{${match}}`, inputTextValues[match]);
+          resultParagraph = replaceParagraphs(resultParagraph, `{${match}}`, inputTextValues[match]);
         })
       }
-
       setParagraphs([...paragraphs, resultParagraph]);
     }
 
@@ -157,6 +160,8 @@ export const ReportForm: React.FC = () => {
     const prevQuestionMapping = handlePreviousQuestionMapping(selectedReportType!, mapIdAnswers);
 
     const prevIndex = parseInt(prevQuestionMapping[currentQuestionIndex.toString()]);
+    
+    setParagraphs(paragraphs.slice(0, -1));
 
     if (prevIndex !== null) {
       setCurrentQuestionIndex(prevIndex);
@@ -176,12 +181,13 @@ export const ReportForm: React.FC = () => {
           setSelectedDate={setSelectedDate}
           setSelectedInsured={setSelectedInsured}
           setSelectedReportType={setSelectedReportType}
+          setSelectedQuestionnaire={setSelectedQuestionnaire}
         />
-          <Dialog header="Vista previa del informe" maximizable style={{ width: '50vw' }} draggable={false} visible={previewDialog} onHide={() => setPreviewDialog(false)}>
+          <Dialog header="Vista previa del informe" maximizable style={{ width: '100vw' }} draggable={false} visible={previewDialog} onHide={() => setPreviewDialog(false)}>
             <div className="field col-12">
               {
-                paragraphs.map((paragraph: string) => (
-                  <p className="text-red-500 mb-5">{paragraph}</p>
+                paragraphs.map((paragraph: string, index: number) => (
+                  <p key={index} className="mb-5 text-justify">{paragraph}</p>
                 ))
               }
             </div>
@@ -189,9 +195,11 @@ export const ReportForm: React.FC = () => {
           {
             selectedDate ?
             <>
-              <div className="field col-12 md:col-1">
+            { paragraphs.length > 0 ?
+              <div className="field col-1">
                 <Button onClick={() => setPreviewDialog(true)} text icon="pi pi-eye" tooltip='Vista previa' tooltipOptions={{ position: 'bottom' }}/>
               </div>
+            : ""}
               <h4 className="col-12">{currentQuestion?.question}</h4>
               {
                 inputs ?
@@ -212,7 +220,7 @@ export const ReportForm: React.FC = () => {
                 ))
               :
               answers?.map((answer) => (
-                <div className="field-checkbox col-6 gap-1" key={answer.id}>
+                <div className="flex field-checkbox col-6 gap-2 text-xs md:text-base flex-column md:flex-row" key={answer.id}>
                   {isYesNoQuestion && !isMultipleChoice ? (
                     <RadioButton
                       className="field-radiobutton"
@@ -238,20 +246,20 @@ export const ReportForm: React.FC = () => {
                       onChange={() => handleAnswerToggle(answer)}
                     />
                   )}
-                  <label className="block w-full">{answer.answer}</label>
+                  <label className="block w-full md:text-left text-center">{answer.answer}</label>
                   {answer.renderInput ? (
-                    <InputTextarea className="block" placeholder="Detalles" />
+                    <InputTextarea className="flex-column" placeholder="Detalles" />
                   ) : (
                     ''
                   )}
                 </div>
               ))}
               <React.Fragment>
-                <div className="flex md:w-4 md:flex-row w-full flex-column ml-auto gap-5">
-                  <Button icon={PrimeIcons.CHEVRON_CIRCLE_LEFT} outlined onClick={handlePrevious} disabled={currentQuestionIndex === 0}>
+                <div className="flex md:flex-row w-full flex-column ml-2 mr-2 gap-5">
+                  <Button className='text-sm md:text-base' icon={PrimeIcons.CHEVRON_CIRCLE_LEFT} severity="success" outlined onClick={handlePrevious} disabled={currentQuestionIndex === 0}>
                     Anterior
                   </Button>
-                  <Button icon={PrimeIcons.CHEVRON_CIRCLE_RIGHT} severity="success" onClick={handleNext} disabled={currentQuestionIndex === selectedReport.length - 1 || (!inputs && selectedAnswers.filter(a => a.questionId === currentQuestion?.id).length === 0)}>
+                  <Button className='text-sm md:text-base' icon={PrimeIcons.CHEVRON_CIRCLE_RIGHT} severity="success" onClick={handleNext} disabled={currentQuestionIndex === selectedQuestionnaire.length - 1 || (!inputs && selectedAnswers.filter(a => a.questionId === currentQuestion?.id).length === 0)}>
                     Siguiente
                   </Button>
                 </div>

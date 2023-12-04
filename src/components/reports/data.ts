@@ -703,7 +703,124 @@ export const reportData: Report [] = [{
     "sinister": "65044-3564"
   }]
 
-
+  export const fireReportQuestions: Question[] = [
+    {
+      id: 0,
+      question: 'Cuáles son los daños (Fuego)? Seleccionar',
+      isYesNoQuestion: false,
+      isMultipleChoice: true,
+      answers: [
+        {
+          id: 0,
+          questionId: 0,
+          answer: 'Tejado',
+          paragraphText: 'Se nos informa de daños en: {answers}, debido a un fuerte vendaval ocurrido durante el día: {date}',
+        },
+        {
+          id: 1,
+          questionId: 0,
+          answer: 'Persianas tipo Mallorquinas de ventanas',
+          paragraphText: 'Se nos informa de daños en: {answers}, debido a un fuerte vendaval ocurrido durante el día: {date}',
+        },
+        {
+          id: 2,
+          questionId: 0,
+          answer: 'Puertas Persianas mallorquinas',
+          paragraphText: 'Se nos informa de daños en: {answers}, debido a un fuerte vendaval ocurrido durante el día: {date}',
+        },
+        {
+          id: 3,
+          questionId: 0,
+          answer: 'Árbol',
+          paragraphText: 'Se nos informa de daños en: {answers}, debido a un fuerte vendaval ocurrido durante el día: {date}',
+        },
+        {
+          id: 4,
+          questionId: 0,
+          answer: 'Mobiliario de jardín',
+          paragraphText: 'Se nos informa de daños en: {answers}, debido a un fuerte vendaval ocurrido durante el día: {date}',
+        },
+        {
+          id: 5,
+          questionId: 0,
+          answer: 'Vallado metálico',
+          paragraphText: 'Se nos informa de daños en: {answers}, debido a un fuerte vendaval ocurrido durante el día: {date}',
+        },
+        {
+          id: 6,
+          questionId: 0,
+          answer: 'Muro perimetral',
+          paragraphText: 'Se nos informa de daños en: {answers}, debido a un fuerte vendaval ocurrido durante el día: {date}',
+        },
+        {
+          id: 7,
+          questionId: 0,
+          answer: 'Otros',
+          renderInput: true,
+          paragraphText: 'Se nos informa de daños en: {answers}, debido a un fuerte vendaval ocurrido durante el día: {date}',
+        }
+      ]
+    },
+  ];
+  export const waterReportQuestions: Question[] = [
+    {
+      id: 0,
+      question: 'Cuáles son los daños (Agua)? Seleccionar',
+      isYesNoQuestion: false,
+      isMultipleChoice: true,
+      answers: [
+        {
+          id: 0,
+          questionId: 0,
+          answer: 'Tejado',
+          paragraphText: 'Se nos informa de daños en: {answers}, debido a un fuerte vendaval ocurrido durante el día: {date}',
+        },
+        {
+          id: 1,
+          questionId: 0,
+          answer: 'Persianas tipo Mallorquinas de ventanas',
+          paragraphText: 'Se nos informa de daños en: {answers}, debido a un fuerte vendaval ocurrido durante el día: {date}',
+        },
+        {
+          id: 2,
+          questionId: 0,
+          answer: 'Puertas Persianas mallorquinas',
+          paragraphText: 'Se nos informa de daños en: {answers}, debido a un fuerte vendaval ocurrido durante el día: {date}',
+        },
+        {
+          id: 3,
+          questionId: 0,
+          answer: 'Árbol',
+          paragraphText: 'Se nos informa de daños en: {answers}, debido a un fuerte vendaval ocurrido durante el día: {date}',
+        },
+        {
+          id: 4,
+          questionId: 0,
+          answer: 'Mobiliario de jardín',
+          paragraphText: 'Se nos informa de daños en: {answers}, debido a un fuerte vendaval ocurrido durante el día: {date}',
+        },
+        {
+          id: 5,
+          questionId: 0,
+          answer: 'Vallado metálico',
+          paragraphText: 'Se nos informa de daños en: {answers}, debido a un fuerte vendaval ocurrido durante el día: {date}',
+        },
+        {
+          id: 6,
+          questionId: 0,
+          answer: 'Muro perimetral',
+          paragraphText: 'Se nos informa de daños en: {answers}, debido a un fuerte vendaval ocurrido durante el día: {date}',
+        },
+        {
+          id: 7,
+          questionId: 0,
+          answer: 'Otros',
+          renderInput: true,
+          paragraphText: 'Se nos informa de daños en: {answers}, debido a un fuerte vendaval ocurrido durante el día: {date}',
+        }
+      ]
+    },
+  ];
   export const windReportQuestions: Question[] = [
     {
       id: 0,
@@ -800,6 +917,7 @@ export const reportData: Report [] = [{
       question: 'Redacción manual',
       isYesNoQuestion: false,
       isMultipleChoice: false,
+      renderParagraph: true,
       inputs: [
         {
           id: 1,
@@ -930,6 +1048,7 @@ export const reportData: Report [] = [{
       question: 'Datos AEMET',
       isYesNoQuestion: false,
       isMultipleChoice: false,
+      renderParagraph: false,
       inputs: [
         {
           id: 2,
