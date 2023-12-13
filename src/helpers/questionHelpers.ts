@@ -1,4 +1,4 @@
-import { ReportType } from '../interfaces/ReportType';
+import { ReportType } from '../interfaces/Models/ReportType';
 export const handleNextQuestionMapping = (selectedReportType: ReportType, mapIdAnswers: number []): { [key: string]: string } => {
     let nextQuestionMapping = {};
     if(selectedReportType.name === "Viento"){

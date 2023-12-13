@@ -1,4 +1,4 @@
-import { Report } from "../../interfaces";
+import { Report } from "../../interfaces/Models";
 import { Question } from "./ReportForm";
 
 export const reportData: Report [] = [{

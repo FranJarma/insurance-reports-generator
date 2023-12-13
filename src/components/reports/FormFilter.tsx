@@ -1,8 +1,8 @@
 import { Calendar, CalendarChangeEvent } from 'primereact/calendar'
 import { Dropdown, DropdownChangeEvent } from 'primereact/dropdown'
-import { Insured } from '../../interfaces';
+import { Insured } from '../../interfaces/Models';
 import { FC, useEffect } from 'react';
-import { ReportType } from '../../interfaces/ReportType';
+import { ReportType } from '../../interfaces/Models/ReportType';
 import { fireReportQuestions, waterReportQuestions, windReportQuestions } from './data';
 import { Question } from './ReportForm';
 

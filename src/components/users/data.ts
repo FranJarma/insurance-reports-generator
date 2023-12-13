@@ -1,4 +1,4 @@
-import { User } from "../../interfaces";
+import { User } from "../../interfaces/Models";
 
 export const reportData: User [] = [{
   "_id": "aeb463ee-329a-46ef-8f15-9c8cc21be5de",

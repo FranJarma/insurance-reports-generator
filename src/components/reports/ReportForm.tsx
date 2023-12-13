@@ -6,10 +6,10 @@ import { Checkbox } from 'primereact/checkbox';
 import { Dialog } from 'primereact/dialog';
 import { FormFilter } from './FormFilter';
 import { InputTextarea } from 'primereact/inputtextarea';
-import { Insured } from '../../interfaces/Insured';
+import { Insured } from '../../interfaces/Models/Insured';
 import { PrimeIcons } from 'primereact/api';
 import { RadioButton } from 'primereact/radiobutton';
-import { ReportType } from '../../interfaces/ReportType';
+import { ReportType } from '../../interfaces/Models/ReportType';
 import { windReportQuestions } from './data';
 
 type InputType = "number" | "mask" | "text" | "multiline"

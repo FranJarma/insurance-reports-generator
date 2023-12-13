@@ -1,5 +1,5 @@
 import React from 'react'
-import { DatatableColumn } from '../../interfaces'
+import { DatatableColumn } from '../../interfaces/Models'
 import { Crud } from '../Crud'
 import { reportData } from './data';
 import { Layout } from '../Layout';
