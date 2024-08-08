@@ -1,42 +1,23 @@
-import { DatatableColumn } from '../../interfaces/Models'
+import { allReportsListColumns } from './datatableColumns';
 import { Crud } from '../Crud'
-import { reportData } from './data';
+import { CrudProps } from '../../interfaces/Props/Crud';
 import { Layout } from '../Layout';
+import { Report } from '../../interfaces/Models';
+import { reportData } from './data';
 import { ReportForm } from './ReportForm';
 
 export const CrudReports = () => {
-    
-  const dtColumns: DatatableColumn [] = [
-    {
-        exportable: false,
-        selectionMode: "multiple"
-    },
-    {
-        exportable: false,
-        field: "insured",
-        header: "Asegurado",
-        sortable: true,
-        selectionMode: "multiple"
-    },
-    {
-        exportable: false,
-        field: "code",
-        header: "Código",
-        sortable: true,
-        selectionMode: "multiple"
-    },
-    {
-        exportable: false,
-        field: "sinister",
-        header: "Siniestro",
-        sortable: true,
-        selectionMode: "multiple"
-    }
-  ]
+
+  const crudProps: CrudProps<Report> = {
+    columns: allReportsListColumns,
+    createForm: <ReportForm/>,
+    modelNamePlural: 'Informes',
+    modelNameSingular: 'Informe'
+  };
 
   return (
     <Layout>
-      <Crud columns={dtColumns} createForm={<ReportForm/>} data={reportData} modelNamePlural='Informes' modelNameSingular='Informe'/>
+      <Crud {...crudProps}/>
     </Layout>
   )
 }

@@ -3,5 +3,6 @@ export interface DatatableColumn {
     field?: string,
     header?: string,
     sortable?: boolean,
-    selectionMode?: string
+    selectionMode?: string,
+    type?: 'text' | 'numeric' | 'date' | string | undefined; 
 }

@@ -10,8 +10,8 @@ export function useGetReports() {
 
   useEffect(() => {
     const fetchData = async () => {
+      const reportService = new ReportService();
       try {
-        const reportService = new ReportService();
         const getReportsFunction = reportService.GetReports();
         const data = await getReportsFunction();
         setReports(data);
@@ -23,7 +23,7 @@ export function useGetReports() {
     };
 
     fetchData();
-  }, []); // Dependencia vacía para ejecutar el efecto solo una vez al montar el componente
+  }, []);
 
   return { reports, loading, error };
 }
